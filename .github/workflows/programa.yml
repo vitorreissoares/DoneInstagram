@@ -1,9 +1,10 @@
 # Monta o programa DoneInstagram para Windows, Mac e Linux.
 #
-# - Ao publicar uma versão (tag "v1.0.0", "v1.1.0"...), os instaladores aparecem
-#   na página "Releases" do repositório, prontos para baixar.
-# - Também dá para rodar à mão (aba Actions > Programa de computador > Run workflow);
-#   os instaladores ficam nos "Artifacts" da execução.
+# - A cada envio para a branch main, os instaladores são montados e publicados na
+#   página "Releases", na versão indicada em desktop/package.json ("version").
+#   Para lançar uma versão nova, basta mudar esse número (ex.: 1.0.0 -> 1.1.0).
+#   Enviar de novo com o mesmo número atualiza os arquivos dessa versão.
+# - Também dá para rodar à mão (aba Actions > Programa de computador > Run workflow).
 #
 # Cada instalador leva o R e os pacotes dentro: quem instala não precisa de mais nada.
 
@@ -11,8 +12,14 @@ name: Programa de computador
 
 on:
   push:
-    tags: ["v*"]
+    branches: [main]
+    paths-ignore: ["**.md"]
   workflow_dispatch:
+
+# Um envio novo cancela a montagem anterior que ainda estiver rodando
+concurrency:
+  group: programa-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: write
@@ -106,15 +113,22 @@ jobs:
   publicar:
     name: Publicar a versão
     needs: construir
-    if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      - name: Ler o número da versão
+        id: versao
+        run: echo "tag=v$(node -p "require('./desktop/package.json').version")" >> "$GITHUB_OUTPUT"
       - uses: actions/download-artifact@v4
         with:
           path: instaladores
           merge-multiple: true
       - uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.versao.outputs.tag }}
+          name: DoneInstagram ${{ steps.versao.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          make_latest: "true"
           files: instaladores/*
           body: |
             ## Baixe o instalador do seu computador

@@ -67,15 +67,11 @@ Instalar uma versão nova ou desinstalar o programa **não apaga** essa pasta.
 
 ### Publicar uma versão nova
 
-1. Mude o número em `desktop/package.json` (por exemplo, `"version": "1.1.0"`).
-2. Crie a tag correspondente e envie:
-   ```
-   git tag v1.1.0
-   git push origin v1.1.0
-   ```
-3. O GitHub monta os instaladores das três plataformas, em cerca de 20 a 30 minutos (aba **Actions**), e os publica em **Releases**.
+1. Faça as mudanças e mude o número em `desktop/package.json` (por exemplo, `"version": "1.1.0"`).
+2. Envie para a branch `main`.
+3. O GitHub monta os instaladores das três plataformas, em cerca de 20 a 30 minutos (aba **Actions**), e os publica em **Releases** como `v1.1.0`.
 
-Para testar sem publicar, use **Actions → Programa de computador → Run workflow**. Os instaladores ficam em **Artifacts**, na página da execução.
+Enviar de novo sem mudar o número atualiza os instaladores dessa mesma versão. Mudanças só em arquivos `.md` (como este) não disparam a montagem.
 
 ### Rodar pelo R, sem instalar
 
