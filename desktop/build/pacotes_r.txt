@@ -1,1 +1,1 @@
-r-base=4.5 r-shiny r-bslib r-dt r-httr2 r-dplyr r-tidyr r-purrr r-stringr r-readr r-lubridate r-tibble r-readxl r-jsonlite r-av
+r-base=4.5 r-shiny r-bslib r-dt r-httr2 r-dplyr r-tidyr r-purrr r-stringr r-readr r-lubridate r-tibble r-readxl r-jsonlite

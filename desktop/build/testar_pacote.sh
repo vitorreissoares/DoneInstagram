@@ -21,7 +21,7 @@ case "$(uname -s)" in
   *)
     RH="$REC/r/lib/R"
     export R_HOME="$RH" R_SHARE_DIR="$RH/share" R_INCLUDE_DIR="$RH/include" R_DOC_DIR="$RH/doc"
-    export CURL_CA_BUNDLE="$REC/r/ssl/cacert.pem"
+    export CURL_CA_BUNDLE="$REC/r/ssl/cacert.pem" PATH="$REC/r/bin:$PATH"
     if [ "$(uname -s)" = "Darwin" ]; then export LANG=en_US.UTF-8 LC_ALL=en_US.UTF-8; else export LANG=C.UTF-8 LC_ALL=C.UTF-8; fi
     CMD=("$RH/bin/exec/R" --no-save --no-restore --no-echo -f "$REC/iniciar.R") ;;
 esac

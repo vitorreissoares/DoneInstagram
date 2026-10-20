@@ -86,9 +86,12 @@ jobs:
 
       - name: Montar o R com os pacotes do projeto
         run: |
+          # O pacote av não existe para Mac com chip Apple: lá o áudio sai pelo ffmpeg
+          PACOTES="$(cat desktop/build/pacotes_r.txt) ffmpeg"
+          if [ "${{ matrix.plataforma }}" != "osx-arm64" ]; then PACOTES="$PACOTES r-av"; fi
           bash desktop/build/rodar.sh "Montar o R" \
             "$MM" create -y -r "$RUNNER_TEMP/mamba" -p desktop/r-env --platform ${{ matrix.plataforma }} \
-            -c conda-forge --override-channels $(cat desktop/build/pacotes_r.txt)
+            -c conda-forge --override-channels $PACOTES
           bash desktop/build/rodar.sh "Enxugar o R" bash desktop/build/enxugar_r.sh desktop/r-env
 
       - uses: actions/setup-node@v5

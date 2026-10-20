@@ -113,5 +113,10 @@
   "author": {
     "name": "Equipe DoneInstagram",
     "email": "doneinstagram@users.noreply.github.com"
+  },
+  "homepage": "https://github.com/vitorreissoares/DoneInstagram",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vitorreissoares/DoneInstagram.git"
   }
 }

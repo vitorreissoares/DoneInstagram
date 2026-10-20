@@ -386,20 +386,42 @@ baixar_midia <- function(post) {
 }
 
 # Extrai o áudio do vídeo (pacote av) e pede a transcrição ao modelo de áudio
+# Extração do áudio dos vídeos: pelo pacote av ou, se ele não estiver
+# instalado (ex.: programa no Mac com chip Apple), pelo programa ffmpeg
+programa_ffmpeg <- function() {
+  f <- Sys.which("ffmpeg")
+  if (nzchar(f)) unname(f) else NA_character_
+}
+
+pode_extrair_audio <- function() requireNamespace("av", quietly = TRUE) || !is.na(programa_ffmpeg())
+
+# Devolve TRUE se gravou o áudio e FALSE se o vídeo não tem som
+extrair_audio <- function(video, audio) {
+  if (requireNamespace("av", quietly = TRUE)) {
+    info <- tryCatch(av::av_media_info(video), error = function(e) NULL)
+    if (is.null(info) || is.null(info$audio) || NROW(info$audio) == 0) return(FALSE)
+    av::av_audio_convert(video, audio, channels = 1, sample_rate = 16000,
+                         bit_rate = 48000, verbose = FALSE)
+    return(TRUE)
+  }
+  ffmpeg <- programa_ffmpeg()
+  if (is.na(ffmpeg)) {
+    stop("Para transcrever vídeos, instale o pacote av: install.packages(\"av\")")
+  }
+  saida <- suppressWarnings(system2(ffmpeg, c("-hide_banner", "-y", "-i", shQuote(video), "-vn", "-ac", "1",
+                                              "-ar", "16000", "-b:a", "48k", shQuote(audio)),
+                                    stdout = TRUE, stderr = TRUE))
+  if (file.exists(audio) && file.info(audio)$size > 0) return(TRUE)
+  if (any(grepl("does not contain any stream|matches no streams", saida))) return(FALSE)
+  stop("Não foi possível extrair o áudio do vídeo: ", paste(tail(saida, 3), collapse = " "))
+}
+
 transcrever_video <- function(shortCode, modelo = MODELO_TRANSCRICAO) {
   video <- arquivo_video(shortCode)
   if (is.na(video)) return(NA_character_)
-  if (!requireNamespace("av", quietly = TRUE)) {
-    stop("Para transcrever vídeos, instale o pacote av: install.packages(\"av\")")
-  }
-  info <- tryCatch(av::av_media_info(video), error = function(e) NULL)
-  if (is.null(info) || is.null(info$audio) || NROW(info$audio) == 0) return("[SEM ÁUDIO]")
 
   audio <- file.path(PASTA_AUDIOS, paste0(shortCode, ".mp3"))
-  if (!file.exists(audio)) {
-    av::av_audio_convert(video, audio, channels = 1, sample_rate = 16000,
-                         bit_rate = 48000, verbose = FALSE)
-  }
+  if (!file.exists(audio) && !extrair_audio(video, audio)) return("[SEM ÁUDIO]")
   conteudo <- list(
     list(type = "text", text = ler_texto(PROMPTS$transcrever)),
     list(type = "input_audio", input_audio = list(

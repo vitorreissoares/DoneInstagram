@@ -741,7 +741,7 @@ server <- function(input, output, session) {
   )
 
   output$aviso_av <- renderUI({
-    if ("transcricao" %in% input$fontes && !requireNamespace("av", quietly = TRUE)) {
+    if ("transcricao" %in% input$fontes && !pode_extrair_audio()) {
       div(class = "alert alert-warning small p-2",
           icon("triangle-exclamation"), " Para transcrever vídeos, instale o pacote ", code("av"),
           ": rode ", code('install.packages("av")'), " no R e abra o app de novo.")

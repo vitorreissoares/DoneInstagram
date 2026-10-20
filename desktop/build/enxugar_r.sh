@@ -9,7 +9,7 @@ if [ -d lib ]; then find lib -maxdepth 1 -name "*.a" -delete; fi
 if [ -d bin ]; then
   find bin -maxdepth 1 \( -name "*-conda-*" -o -name "pandoc*" -o -name "*gcc*" -o -name "*g++*" -o -name "*gfortran*" \
        -o -name "clang*" -o -name "ld" -o -name "ld.*" -o -name "x86_64-*" -o -name "arm64-*" \
-       -o -name "ffmpeg" -o -name "ffprobe" \) -delete
+       -o -name "ffprobe" -o -name "ffplay" \) -delete
 fi
 # Windows
 if [ -d Library ]; then
