@@ -68,14 +68,17 @@ jobs:
         shell: bash
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Instalar o micromamba
         run: |
           mkdir -p "$RUNNER_TEMP/mm"
-          curl -Ls "https://micro.mamba.pm/api/micromamba/${{ matrix.micromamba }}/latest" -o "$RUNNER_TEMP/mm/mm.tar.bz2"
-          tar -xjf "$RUNNER_TEMP/mm/mm.tar.bz2" -C "$RUNNER_TEMP/mm"
-          if [ -f "$RUNNER_TEMP/mm/Library/bin/micromamba.exe" ]; then
+          cd "$RUNNER_TEMP/mm"
+          # caminhos relativos: o tar do Windows confunde "D:" com um servidor remoto
+          bash "$GITHUB_WORKSPACE/desktop/build/rodar.sh" "Baixar o micromamba" \
+            curl -fsSL "https://micro.mamba.pm/api/micromamba/${{ matrix.micromamba }}/latest" -o mm.tar.bz2
+          bash "$GITHUB_WORKSPACE/desktop/build/rodar.sh" "Extrair o micromamba" tar -xjf mm.tar.bz2
+          if [ -f Library/bin/micromamba.exe ]; then
             echo "MM=$RUNNER_TEMP/mm/Library/bin/micromamba.exe" >> "$GITHUB_ENV"
           else
             echo "MM=$RUNNER_TEMP/mm/bin/micromamba" >> "$GITHUB_ENV"
@@ -83,11 +86,12 @@ jobs:
 
       - name: Montar o R com os pacotes do projeto
         run: |
-          "$MM" create -y -q -r "$RUNNER_TEMP/mamba" -p desktop/r-env --platform ${{ matrix.plataforma }} \
+          bash desktop/build/rodar.sh "Montar o R" \
+            "$MM" create -y -r "$RUNNER_TEMP/mamba" -p desktop/r-env --platform ${{ matrix.plataforma }} \
             -c conda-forge --override-channels $(cat desktop/build/pacotes_r.txt)
-          bash desktop/build/enxugar_r.sh desktop/r-env
+          bash desktop/build/rodar.sh "Enxugar o R" bash desktop/build/enxugar_r.sh desktop/r-env
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 20
 
@@ -96,13 +100,13 @@ jobs:
         env:
           CSC_IDENTITY_AUTO_DISCOVERY: "false"
         run: |
-          npm install --no-audit --no-fund
-          npx electron-builder ${{ matrix.builder }} --publish never
+          bash build/rodar.sh "npm install" npm install --no-audit --no-fund
+          bash build/rodar.sh "Montar o instalador" npx electron-builder ${{ matrix.builder }} --publish never
 
       - name: Testar o programa montado
         # O Mac Intel é montado num Mac com chip Apple: o teste depende do Rosetta
         continue-on-error: ${{ matrix.plataforma == 'osx-64' }}
-        run: bash desktop/build/testar_pacote.sh "desktop/${{ matrix.recursos }}"
+        run: bash desktop/build/rodar.sh "Testar o programa" bash desktop/build/testar_pacote.sh "desktop/${{ matrix.recursos }}"
 
       - uses: actions/upload-artifact@v4
         with:
@@ -115,7 +119,7 @@ jobs:
     needs: construir
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Ler o número da versão
         id: versao
         run: echo "tag=v$(node -p "require('./desktop/package.json').version")" >> "$GITHUB_OUTPUT"
