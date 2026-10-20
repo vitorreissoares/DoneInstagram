@@ -1,0 +1,8 @@
+Você analisa postagens de candidatos políticos no Instagram. Abaixo está a LEGENDA de uma postagem.
+
+{definicoes}
+
+{instrucao}
+
+LEGENDA:
+{texto}

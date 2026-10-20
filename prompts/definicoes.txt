@@ -1,0 +1,32 @@
+Uma postagem pode ter dois tipos de conteúdo: CONTEÚDO PROGRAMÁTICO (programas de governo, propostas, políticas públicas, debates ou pautas públicas) e CONTEÚDO PERSONALISTA (atributos pessoais, trajetória, personalidade, imagem ou características individuais de uma liderança política). Cada tipo tem cinco subcategorias.
+
+SUBCATEGORIAS DE CONTEÚDO PROGRAMÁTICO
+
+prog_pautas — PAUTAS E PROBLEMAS PÚBLICOS: conteúdos que enfatizam problemas sociais, econômicos ou políticos, situações que precisam ser enfrentadas, demandas da população ou questões de interesse público. O foco está na identificação, descrição ou discussão de um problema público, sem que uma proposta concreta de solução ou uma crítica política seja o elemento central.
+
+prog_propostas — PROPOSTAS E SOLUÇÕES: conteúdos que apresentam propostas, políticas públicas, medidas, projetos ou soluções para problemas públicos. O foco está no que deve ser feito, será feito ou está sendo proposto para enfrentar determinado problema ou produzir determinado resultado.
+
+prog_prestacao — PRESTAÇÃO DE CONTAS: conteúdos que enfatizam ações já realizadas, obras ou medidas já executadas, resultados alcançados, entregas, realizações ou desempenho político e administrativo. O foco está no que já foi feito, entregue ou realizado.
+
+prog_mobilizacao — MOBILIZAÇÃO POLÍTICA: conteúdos que buscam mobilizar, convocar ou estimular pessoas para participação política, apoio, engajamento, manifestações, eventos, campanhas, votações ou outras formas de participação política.
+
+prog_negativa — CAMPANHA NEGATIVA (programática): conteúdos que buscam descredibilizar, criticar ou atribuir características negativas à gestão, às propostas, às políticas públicas ou às realizações de um governo ou grupo político. Inclui críticas, acusações, questionamentos ou avaliações negativas dirigidas a um governo, gestão, grupo político, proposta, política pública ou realização política.
+
+SUBCATEGORIAS DE CONTEÚDO PERSONALISTA
+
+pers_competencia — COMPETÊNCIA: conteúdos que apresentam a liderança como competente, capaz, técnica, experiente, preparada, eficiente ou apta a exercer funções políticas ou de liderança. O foco está nas capacidades, habilidades, conhecimentos, experiência ou qualidades da liderança enquanto indivíduo.
+
+pers_valores — VALORES: conteúdos que enfatizam valores, crenças, características ou elementos identitários compartilhados entre a liderança e sua audiência, como ser rural, patriota, religioso, trabalhador, conservador, popular ou pertencente a determinado grupo social, cultural ou profissional. O foco está em apresentar a liderança como semelhante, próxima ou pertencente ao mesmo universo social ou cultural da audiência.
+
+pers_vida_privada — VIDA PRIVADA: conteúdos relacionados a atividades, experiências ou aspectos da vida privada do líder, como família, rotina, hobbies, momentos pessoais, lazer, relações familiares ou aspectos da vida fora da atividade política.
+
+pers_apoio — APOIO POLÍTICO: conteúdos que apresentam ou destacam a relação da liderança com outras pessoas, incluindo familiares, amigos, aliados, apoiadores, autoridades, outras figuras públicas ou membros da audiência. Inclui demonstrações de proximidade, amizade, apoio, parceria, convivência ou interação com outras pessoas. Considere também marcações de outras pessoas (@), quando o foco estiver na relação ou na proximidade entre os envolvidos.
+
+pers_negativa — CAMPANHA NEGATIVA (personalista): conteúdos que buscam descredibilizar, criticar ou atribuir características negativas a uma liderança enquanto indivíduo: sua competência, caráter, valores, experiências, relações pessoais, proximidade com a audiência ou aspectos de sua vida privada, com o objetivo de prejudicar sua imagem pessoal.
+
+REGRAS:
+1. Avalie CADA subcategoria de forma independente, considerando o sentido geral do conteúdo, e não apenas a presença de palavras específicas.
+2. Uma postagem pode ter subcategorias dos dois tipos ao mesmo tempo (programático e personalista), ou nenhuma.
+3. Marque todas as subcategorias que estiverem claramente presentes, quantas forem necessárias (e nenhuma se nenhuma se aplicar).
+4. Diferencie críticas à liderança enquanto indivíduo (pers_negativa) de críticas à sua gestão, governo, política pública ou realização administrativa (prog_negativa).
+5. Não marque campanha negativa apenas porque o conteúdo menciona uma dificuldade ou um resultado negativo: é preciso haver crítica, questionamento ou descredibilização de alguém ou de algo.

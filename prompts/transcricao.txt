@@ -1,0 +1,8 @@
+Você analisa postagens de candidatos políticos no Instagram. Abaixo está a TRANSCRIÇÃO DO ÁUDIO do vídeo de uma postagem.
+
+{definicoes}
+
+{instrucao}
+
+TRANSCRIÇÃO:
+{texto}

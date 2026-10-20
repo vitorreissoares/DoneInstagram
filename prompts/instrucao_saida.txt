@@ -1,0 +1,3 @@
+Atribua 1 se a subcategoria estiver presente e 0 se não estiver.
+Responda SOMENTE com um JSON neste formato, sem nenhum outro texto:
+{"prog_pautas": 0, "prog_propostas": 0, "prog_prestacao": 0, "prog_mobilizacao": 0, "prog_negativa": 0, "pers_competencia": 0, "pers_valores": 0, "pers_vida_privada": 0, "pers_apoio": 0, "pers_negativa": 0}

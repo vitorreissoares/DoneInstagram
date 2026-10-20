@@ -1,0 +1,18 @@
+# Dados e segredos de cada pessoa (nunca vão para o GitHub)
+config/chave_openrouter.txt
+config/validacao_remota.json
+config/periodos.json
+saidas/*
+!saidas/.gitkeep
+midia/*
+!midia/.gitkeep
+.Renviron
+.Rhistory
+.RData
+.Rproj.user/
+
+# Programa de computador: arquivos gerados na montagem
+desktop/node_modules/
+desktop/dist/
+desktop/r-env/
+*.zip

@@ -1,0 +1,30 @@
+[
+  {
+    "titulo": "Pesquisa",
+    "texto": "Pesquisas apontam para a crescente personalização da política nas democracias contemporâneas, marcada pelo enfraquecimento dos partidos e pela centralidade de lideranças individuais. Nesse contexto, o personalismo eleitoral refere-se às estratégias usadas por lideranças políticas para se diferenciar, por meio de atributos pessoais ou de elementos coletivos, como propostas programáticas (Luján e Acosta y Lara, 2024)."
+  },
+  {
+    "titulo": "Problema (editado)",
+    "texto": "Estudos indicam que os eleitores acompanham pouco os planos de governo e obtêm informações por diferentes meios, como televisão, jornais e plataformas digitais. Com a expansão das mídias sociais as campanhas tonaram-se mais personalizadas.\n\nPortanto, considerando a tendência de personalização das campanhas digitais e a importância das mídias sociais para o acesso às propostas e o debate público. Este estudo investiga, no contexto brasileiro, em que medida as candidaturas utilizam o Instagram para divulgar seus programas de governo ou enfatizar seus atributos pessoais."
+  },
+  {
+    "titulo": "Metodologia",
+    "texto": "A unidade de análise desta pesquisa é cada postagem realizada pelos candidatos à Presidência da República no Brasil, feitas em seus perfis oficiais no Instagram. {proporcao} das postagens mais curtidas de cada candidato no período analisado foram categorizadas pelo modelo de linguagem {modelo} (LLM) a partir de três fontes: a legenda, as imagens e a transcrição do áudio dos vídeos. Cada postagem pode receber mais de uma subcategoria. A classificação foi posteriormente submetida à validação por pesquisadores humanos. A partir de categorias que emergem da literatura."
+  },
+  {
+    "titulo": "Critério de seleção",
+    "texto": "O Instagram foi selecionado por ser a plataforma em que os candidatos possuem maior número de seguidores. Enquanto, os candidatos foram selecionados conforme a intenção de voto alcançada nas pesquisas eleitorais oficiais no período de análise. Foi determinado o alcance mínimo de 2% ou mais de intenção de voto. <a href=\"https://noticias.uol.com.br/eleicoes/agregador-de-pesquisas-eleitorais/\" target=\"_blank\" rel=\"noopener noreferrer\" > Acessar a pesquisa. <\/a>"
+  },
+  {
+    "titulo": "Categorização",
+    "texto": "Orientada por categorias derivadas da literatura, a análise distingue entre apelos individuais, associados ao conteúdo personalista, e apelos coletivos, relacionados ao conteúdo programático."
+  },
+  {
+    "titulo": "Subcategorias",
+    "texto": "Emergentes e sustentadas pela literatura, são elas: Propostas e Soluções, Mobilização Política, Pautas e Problemas Públicos, Prestação de Contas, Valores, Competência, Apoio Político e Campanha Negativa."
+  },
+  {
+    "titulo": "Formatos",
+    "texto": "Imagens, vídeos e conteúdos produzidos por IA são registrados na base."
+  }
+]

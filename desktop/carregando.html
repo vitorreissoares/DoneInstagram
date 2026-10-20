@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'unsafe-inline'; script-src 'unsafe-inline'">
+<title>DoneInstagram</title>
+<style>
+  :root { --primaria: #3f5bd8; --suave: #8a90a0; --linha: #eceef2; }
+  * { box-sizing: border-box; }
+  body { margin: 0; height: 100vh; display: flex; align-items: center; justify-content: center;
+         background: #f7f8fa; color: #1f2430;
+         font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .caixa { text-align: center; max-width: 560px; padding: 24px; }
+  .marca { width: 64px; height: 64px; border-radius: 18px; margin: 0 auto 18px;
+           background: linear-gradient(135deg, #3f5bd8, #8b5cf6); display: flex; align-items: flex-end;
+           justify-content: center; gap: 5px; padding-bottom: 16px; }
+  .marca span { width: 7px; border-radius: 3px; background: #fff; }
+  h1 { font-size: 1.35rem; font-weight: 700; letter-spacing: -.02em; margin: 0 0 6px; }
+  p { color: var(--suave); font-size: .9rem; margin: 0; line-height: 1.5; }
+  .barra { width: 180px; height: 4px; border-radius: 99px; background: var(--linha); margin: 22px auto 0; overflow: hidden; }
+  .barra div { width: 40%; height: 100%; border-radius: 99px; background: var(--primaria); animation: vai 1.2s ease-in-out infinite; }
+  @keyframes vai { 0% { transform: translateX(-100%); } 100% { transform: translateX(250%); } }
+  .erro { display: none; text-align: left; margin-top: 18px; }
+  .erro pre { background: #fff; border: 1px solid var(--linha); border-radius: 10px; padding: 12px; font-size: .72rem;
+              max-height: 260px; overflow: auto; white-space: pre-wrap; color: #5b6170; }
+  .erro code { font-size: .78rem; }
+  body.com-erro .barra { display: none; }
+  body.com-erro .erro { display: block; }
+  body.com-erro h1 { color: #b42318; }
+</style>
+</head>
+<body>
+  <div class="caixa">
+    <div class="marca"><span style="height:14px"></span><span style="height:24px"></span><span style="height:18px"></span></div>
+    <h1 id="titulo">Abrindo o DoneInstagram…</h1>
+    <p id="texto">Na primeira vez, isso pode levar até um minuto.</p>
+    <div class="barra"><div></div></div>
+    <div class="erro">
+      <p>O programa não conseguiu abrir. Feche e abra de novo. Se o problema continuar, envie o arquivo de registro
+         abaixo para quem cuida do projeto (menu Ajuda → Registro do programa).</p>
+      <p style="margin-top:8px"><code id="registro"></code></p>
+      <pre id="detalhes"></pre>
+    </div>
+  </div>
+<script>
+  const q = new URLSearchParams(location.search);
+  if (q.get("erro")) {
+    document.body.classList.add("com-erro");
+    document.getElementById("titulo").textContent = "Não foi possível abrir";
+    document.getElementById("texto").textContent = "";
+    document.getElementById("detalhes").textContent = decodeURIComponent(q.get("erro"));
+    document.getElementById("registro").textContent = q.get("registro") || "";
+  }
+</script>
+</body>
+</html>

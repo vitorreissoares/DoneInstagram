@@ -1,0 +1,116 @@
+{
+  "name": "doneinstagram",
+  "productName": "DoneInstagram",
+  "version": "1.0.0",
+  "description": "Monitoramento de postagens no Instagram: categorização com IA, validação humana e relatório",
+  "main": "main.js",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --publish never"
+  },
+  "devDependencies": {
+    "electron": "33.2.1",
+    "electron-builder": "25.1.8"
+  },
+  "build": {
+    "appId": "org.doneinstagram.app",
+    "productName": "DoneInstagram",
+    "artifactName": "DoneInstagram-${version}-${os}-${arch}.${ext}",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "main.js",
+      "carregando.html",
+      "package.json",
+      "build/icon.png"
+    ],
+    "extraResources": [
+      {
+        "from": "iniciar.R",
+        "to": "iniciar.R"
+      },
+      {
+        "from": "r-env",
+        "to": "r",
+        "filter": [
+          "**/*"
+        ]
+      },
+      {
+        "from": "..",
+        "to": "app",
+        "filter": [
+          "app.R",
+          "LEIA-ME.md",
+          "R/**",
+          "prompts/**",
+          "templates/**",
+          "apps_script/**",
+          "padrao/**",
+          "assets/**",
+          "config/candidatos.csv",
+          "config/sobre_a_pesquisa.json",
+          "config/relatorio_final.html"
+        ]
+      }
+    ],
+    "asar": true,
+    "afterPack": "build/assinar_mac.js",
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "DoneInstagram",
+      "uninstallDisplayName": "DoneInstagram",
+      "language": "1046",
+      "installerLanguages": [
+        "pt_BR"
+      ],
+      "deleteAppDataOnUninstall": false
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.productivity",
+      "icon": "build/icon.png",
+      "identity": null,
+      "hardenedRuntime": false,
+      "gatekeeperAssess": false
+    },
+    "dmg": {
+      "title": "DoneInstagram"
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ],
+      "category": "Office",
+      "icon": "build/icon.png",
+      "maintainer": "Equipe DoneInstagram <doneinstagram@users.noreply.github.com>",
+      "synopsis": "Monitoramento de postagens no Instagram"
+    }
+  },
+  "author": {
+    "name": "Equipe DoneInstagram",
+    "email": "doneinstagram@users.noreply.github.com"
+  }
+}

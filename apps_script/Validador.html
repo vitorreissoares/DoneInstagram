@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Validador de classificação</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#667085;--line:#e4e7ec;--accent:#2457d6;--ok:#087443;--prog:#f97316;--pers:#8b5cf6}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
+header{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);padding:12px 20px}
+.top{max-width:1180px;margin:auto;display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.brand{font-weight:800;font-size:18px}.status{font-size:13px;color:var(--muted)}
+.bar{height:8px;background:#eef1f5;border-radius:99px;overflow:hidden;margin-top:6px;width:240px}.bar>div{height:100%;background:var(--accent);transition:width .3s}
+main{max-width:1180px;margin:20px auto;padding:0 16px}
+button{font:inherit;border:0;border-radius:10px;padding:10px 16px;cursor:pointer;font-weight:700}
+.primary{background:var(--accent);color:#fff}.ghost{background:#fff;border:1px solid var(--line);color:var(--text)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(16,24,40,.04);margin-bottom:16px}
+.head{display:flex;justify-content:space-between;gap:10px;padding:14px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.cand{font-weight:800;color:var(--accent)}.meta{color:var(--muted);font-size:13px}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:18px;padding:18px}
+@media(max-width:950px){.cols{grid-template-columns:1fr}}
+.texto{white-space:pre-wrap;line-height:1.55;max-height:220px;overflow:auto;background:#f8fafc;border-radius:10px;padding:12px 14px;font-size:14px}
+.rotulo{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:14px 0 6px}
+details summary{cursor:pointer;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:14px 0 6px}
+.pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.pill{background:#f2f4f7;padding:5px 10px;border-radius:99px;font-size:13px;text-decoration:none;color:inherit}
+.instagram-wrap{display:flex;justify-content:center;max-height:640px;overflow:auto}
+.instagram-wrap .instagram-media{min-width:300px!important;max-width:420px!important;width:100%!important}
+/* tabela de classificação */
+.tabela{width:100%;border-collapse:collapse;font-size:14px}
+.tabela th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);text-align:center;padding:6px 4px;font-weight:800}
+.tabela th:first-child{text-align:left}
+.tabela td{padding:7px 4px;border-top:1px solid var(--line);text-align:center}
+.tabela td:first-child{text-align:left}
+.tabela tr.grupo td{background:#fafbfc;font-weight:800;font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.tabela tr.grupo.prog td{color:var(--prog)}.tabela tr.grupo.pers td{color:var(--pers)}
+.tabela tr.escolhida td{background:#eef4ff}
+.dot{display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid #cfd4dc}
+.dot.on{background:var(--accent);border-color:var(--accent)}
+.na{color:#c0c6cf;font-size:12px}
+.switch{position:relative;display:inline-block;width:44px;height:24px}
+.switch input{opacity:0;width:0;height:0}
+.slider{position:absolute;inset:0;background:#d0d5dd;border-radius:99px;transition:.2s;cursor:pointer}
+.slider:before{content:"";position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.switch input:checked+.slider{background:var(--ok)}.switch input:checked+.slider:before{transform:translateX(20px)}
+.legenda-fontes{font-size:12px;color:var(--muted);margin:8px 0 0}
+.contador{font-weight:800}.contador.cheio{color:#b42318}
+.rodape{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;background:#fafbfc;border-top:1px solid var(--line);flex-wrap:wrap}
+.formato label{margin-right:12px;font-size:14px}
+.empty{text-align:center;padding:60px 20px;color:var(--muted)}
+.error{background:#fef3f2;color:#b42318;padding:12px 14px;border-radius:10px;margin-bottom:15px}
+.who{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.who input{padding:10px;border:1px solid #cfd4dc;border-radius:9px;font:inherit;min-width:240px}
+.loading{padding:30px;text-align:center;color:var(--muted)}
+</style>
+</head>
+<body>
+<header><div class="top">
+  <div><div class="brand">Validador de classificação</div><div class="status" id="mode">Validação compartilhada</div></div>
+  <div><div class="status" id="stats"></div><div class="bar"><div id="barFill" style="width:0"></div></div></div>
+</div></header>
+
+<main>
+  <div id="error"></div>
+  <section id="login" class="card" style="padding:20px">
+    <h2 style="margin-top:0">Bem-vindo(a)!</h2>
+    <p>Você vai ver uma postagem por vez, com o que a IA encontrou na <b>legenda</b>, na <b>imagem</b> e no <b>vídeo</b>.
+       Ligue todas as subcategorias que se aplicam (quantas forem necessárias) para chegar à classificação final e clique em <b>Confirmar</b>.</p>
+    <p class="status">Seu nome fica registrado em cada validação. Duas pessoas nunca recebem a mesma postagem ao mesmo tempo.</p>
+    <div class="who"><input id="nome" placeholder="Seu nome" autocomplete="name"><button class="primary" id="entrar">Começar</button></div>
+  </section>
+  <section id="list"></section>
+</main>
+
+<script>
+let avaliador="",current=null,SUBS=[];
+const FONTES=[["legenda","Legenda"],["imagem","Imagem"],["transcricao","Vídeo"]];
+const $=id=>document.getElementById(id);
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+function fmt(n){return Number(n||0).toLocaleString("pt-BR");}
+function chaves(t){return String(t||"").split(";").filter(Boolean);}
+
+// Chama uma função do Codigo.gs e devolve uma Promise
+function servidor(fn,...args){
+  return new Promise((ok,erro)=>google.script.run.withSuccessHandler(ok).withFailureHandler(erro)[fn](...args));
+}
+function mostrarErro(e){$("error").innerHTML='<div class="error"><b>Erro:</b> '+esc(e.message||e)+'</div>';}
+function atualizarProgresso(p){
+  if(!p)return;
+  $("stats").textContent=`${p.feitas} de ${p.total} validadas`+(p.minhas!==undefined?` · você: ${p.minhas}`:"");
+  $("barFill").style.width=(p.total?Math.round(100*p.feitas/p.total):0)+"%";
+}
+
+let instagramEmbedPromise=null;
+function loadInstagramEmbed(){
+  if(window.instgrm?.Embeds)return Promise.resolve();
+  if(instagramEmbedPromise)return instagramEmbedPromise;
+  instagramEmbedPromise=new Promise((resolve,reject)=>{
+    const s=document.createElement("script");s.async=true;s.src="https://www.instagram.com/embed.js";
+    s.onload=()=>resolve();s.onerror=()=>reject(new Error("Prévia indisponível."));document.head.appendChild(s);
+  });
+  return instagramEmbedPromise;
+}
+
+async function entrar(){
+  avaliador=$("nome").value.trim();
+  if(!avaliador)return alert("Digite seu nome.");
+  try{localStorage.setItem("validador_nome",avaliador);}catch(e){}
+  $("login").style.display="none";
+  $("mode").textContent="Validação compartilhada · "+avaliador;
+  try{
+    const cfg=await servidor("configuracao");
+    SUBS=cfg.subcategorias||[];
+    await carregar();
+  }catch(e){mostrarErro(e);}
+}
+
+async function carregar(){
+  $("error").innerHTML="";
+  $("list").innerHTML='<div class="loading">Carregando próxima postagem…</div>';
+  try{
+    const r=await servidor("proximaPostagem",avaliador);
+    current=r.postagem;atualizarProgresso(r.progresso);render();
+  }catch(e){$("list").innerHTML="";mostrarErro(e);}
+}
+
+function render(){
+  if(!current){
+    $("list").innerHTML='<div class="card empty"><h2>🎉 Nada pendente</h2><p>Todas as postagens desta rodada já foram validadas ou estão com outros pesquisadores.</p><p><button class="ghost" onclick="carregar()">Verificar de novo</button></p></div>';
+    return;
+  }
+  $("list").innerHTML=card(current);
+  bind();
+  if(current.url){loadInstagramEmbed().then(()=>window.instgrm?.Embeds?.process()).catch(()=>{});}
+}
+
+function tabela(r){
+  const fontes=chaves(r.fontes);
+  const ia={};FONTES.forEach(([f])=>ia[f]=chaves(r["ia_"+f]));
+  const sugestao=chaves(r.ia_sugestao);
+  const cab='<tr><th>Subcategoria</th>'+FONTES.map(([,n])=>`<th>${n}</th>`).join("")+'<th>Final</th></tr>';
+  let html="",grupo="";
+  SUBS.forEach(s=>{
+    if(s.categoria!==grupo){grupo=s.categoria;html+=`<tr class="grupo ${grupo.includes("program")?"prog":"pers"}"><td colspan="5">${esc(grupo)}</td></tr>`;}
+    const marcada=sugestao.includes(s.chave);
+    html+=`<tr class="${marcada?"escolhida":""}" data-chave="${s.chave}"><td>${esc(s.rotulo)}</td>`+
+      FONTES.map(([f])=>fontes.includes(f)?`<td><span class="dot ${ia[f].includes(s.chave)?"on":""}" title="${ia[f].includes(s.chave)?"A IA marcou":"A IA não marcou"}"></span></td>`:'<td class="na" title="Sem esta fonte">—</td>').join("")+
+      `<td><label class="switch"><input type="checkbox" class="final" value="${s.chave}" ${marcada?"checked":""}><span class="slider"></span></label></td></tr>`;
+  });
+  return `<table class="tabela">${cab}${html}</table>
+    <p class="legenda-fontes"><span class="dot on"></span> = a IA marcou nesta fonte · — = a postagem não tem esta fonte · O interruptor já vem ligado com a sugestão da IA.</p>`;
+}
+
+function card(r){
+  const transcricao=r.transcricao&&!["[SEM ÁUDIO]","[SEM FALA]"].includes(r.transcricao)?r.transcricao:"";
+  return `<article class="card">
+    <div class="head"><div><span class="cand">${esc(r.candidato)}</span> · <span class="meta">${esc(r.data)} · ${esc(r.shortCode)}</span></div>
+      <div class="meta">Formato: ${esc(r.formato_original||"—")}</div></div>
+    <div class="cols">
+      <div>
+        <div class="rotulo">Legenda</div>
+        <div class="texto">${esc(r.caption)||'<span class="meta">Sem legenda</span>'}</div>
+        ${transcricao?`<details open><summary>Transcrição do vídeo</summary><div class="texto">${esc(transcricao)}</div></details>`:(r.transcricao?`<div class="rotulo">Vídeo</div><div class="meta">${esc(r.transcricao)}</div>`:"")}
+        <div class="pills"><span class="pill">♥ ${fmt(r.likes)} curtidas</span><span class="pill">💬 ${fmt(r.comentarios)} comentários</span>${r.url?`<a class="pill" href="${esc(r.url)}" target="_blank" rel="noopener">Abrir no Instagram ↗</a>`:''}</div>
+        <div class="rotulo">Classificação <span class="contador" id="contador"></span></div>
+        ${tabela(r)}
+      </div>
+      <div class="instagram-wrap">${r.url?`<blockquote class="instagram-media" data-instgrm-permalink="${esc(r.url)}" data-instgrm-version="14"><a href="${esc(r.url)}" target="_blank">Ver no Instagram</a></blockquote>`:''}</div>
+    </div>
+    <div class="rodape">
+      <div class="formato"><b>Formato:</b>
+        <label><input type="radio" name="fmt" value="manter" checked> Manter (${esc(r.formato_original||"—")})</label>
+        <label><input type="radio" name="fmt" value="ia"> Produzido por IA</label></div>
+      <div><button class="ghost" id="nenhuma">Nenhuma se aplica</button> <button class="primary" id="salvar">Confirmar e próxima</button></div>
+    </div>
+  </article>`;
+}
+
+function marcadas(){return [...document.querySelectorAll("input.final:checked")].map(x=>x.value);}
+function atualizarContador(){
+  const n=marcadas().length,c=$("contador");
+  c.textContent=`· ${n} selecionada${n===1?"":"s"}`;
+  document.querySelectorAll("tr[data-chave]").forEach(tr=>tr.classList.toggle("escolhida",tr.querySelector("input.final").checked));
+}
+function bind(){
+  document.querySelectorAll("input.final").forEach(x=>x.onchange=atualizarContador);
+  $("nenhuma").onclick=()=>{document.querySelectorAll("input.final").forEach(x=>x.checked=false);atualizarContador();};
+  $("salvar").onclick=salvar;
+  atualizarContador();
+}
+
+async function salvar(){
+  const final=marcadas();
+  if(final.length===0&&!confirm("Nenhuma subcategoria selecionada. Confirmar que nenhuma se aplica?"))return;
+  const fmtVal=document.querySelector('input[name="fmt"]:checked').value==="ia"?"Produzido por IA":(current.formato_original||"");
+  const btn=$("salvar");btn.disabled=true;btn.textContent="Salvando…";
+  try{
+    const p=await servidor("salvarValidacao",current.id,final.join(";"),fmtVal,avaliador);
+    atualizarProgresso(p);
+    await carregar();
+  }catch(e){btn.disabled=false;btn.textContent="Confirmar e próxima";alert("Não foi possível salvar: "+(e.message||e));}
+}
+
+$("entrar").onclick=entrar;
+$("nome").addEventListener("keydown",e=>{if(e.key==="Enter")entrar();});
+try{$("nome").value=localStorage.getItem("validador_nome")||"";}catch(e){}
+</script>
+</body></html>

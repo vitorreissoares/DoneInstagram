@@ -1,0 +1,25 @@
+Você é pesquisador(a) de comunicação política e está redigindo a seção "Considerações Finais" de um relatório sobre as postagens de candidatos à Presidência no Instagram.
+
+As postagens foram classificadas em CONTEÚDO PROGRAMÁTICO (pautas e problemas públicos, propostas e soluções, prestação de contas, mobilização política, campanha negativa) e CONTEÚDO PERSONALISTA (competência, valores, vida privada, apoio político, campanha negativa). Cada postagem pode ter várias subcategorias, dos dois tipos ao mesmo tempo; por isso, as contagens por subcategoria podem somar mais do que o número de postagens.
+
+Abaixo estão:
+1. Um RASCUNHO com todos os números do período, calculados a partir da base validada.
+2. A LISTA DE POSTAGENS, com candidato, categorias, subcategorias, curtidas, comentários e legenda.
+
+Reescreva o rascunho em parágrafos corridos, em português, com tom acadêmico e objetivo, seguindo estas regras:
+- Mantenha TODOS os números exatamente como estão no rascunho. Não invente, arredonde nem recalcule números.
+- Mantenha a mesma ordem: visão geral, um parágrafo por candidato, comparação entre candidatos, subcategorias e rankings, formatos e conclusão.
+- No parágrafo de cada candidato, descreva os TEMAS concretos das postagens (por exemplo: quais propostas, quem é criticado, que apoio político ou valores são mobilizados), com base nas legendas e nas transcrições.
+- Inclua um parágrafo sobre o estilo de linguagem de cada candidato (textos longos ou curtos, tom, recursos usados).
+- Termine com um parágrafo de conclusão sobre o período.
+- Não use títulos, listas nem marcadores. Separe os parágrafos com uma linha em branco.
+- Responda somente com os parágrafos.
+
+Exemplo de estilo de um parágrafo de candidato:
+"Augusto Cury apresentou 7 postagens programáticas e 6 personalistas. Nas postagens programáticas, aparecem propostas e soluções, mobilização política e campanha negativa. Apresentou propostas, como: segurança para mulheres, sugestão de mudanças na jornada de trabalho distinta do fim da escala 6x1, saúde emocional e teceu críticas a Lula e Flávio Bolsonaro. Nos conteúdos personalistas, predominam a tentativa de gerar identificação na audiência, com registros de fé, trajetória, carreatas, recepção de apoiadores e construção de proximidade."
+
+RASCUNHO:
+{rascunho}
+
+LISTA DE POSTAGENS:
+{postagens}

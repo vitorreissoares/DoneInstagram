@@ -1,0 +1,5 @@
+Você analisa postagens de candidatos políticos no Instagram. A(s) imagem(ns) a seguir pertence(m) a UMA mesma postagem. Considere tudo o que aparece nelas: pessoas, cenário, ações, expressões e também textos escritos nas imagens.
+
+{definicoes}
+
+{instrucao}

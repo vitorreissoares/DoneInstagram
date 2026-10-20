@@ -1,0 +1,130 @@
+# Monta o programa DoneInstagram para Windows, Mac e Linux.
+#
+# - Ao publicar uma versão (tag "v1.0.0", "v1.1.0"...), os instaladores aparecem
+#   na página "Releases" do repositório, prontos para baixar.
+# - Também dá para rodar à mão (aba Actions > Programa de computador > Run workflow);
+#   os instaladores ficam nos "Artifacts" da execução.
+#
+# Cada instalador leva o R e os pacotes dentro: quem instala não precisa de mais nada.
+
+name: Programa de computador
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  construir:
+    name: ${{ matrix.nome }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - nome: Windows
+            os: windows-latest
+            micromamba: win-64
+            plataforma: win-64
+            builder: --win --x64
+            recursos: dist/win-unpacked/resources
+            arquivos: desktop/dist/*.exe
+          - nome: Mac (chip Apple)
+            os: macos-14
+            micromamba: osx-arm64
+            plataforma: osx-arm64
+            builder: --mac --arm64
+            recursos: dist/mac-arm64/DoneInstagram.app/Contents/Resources
+            arquivos: desktop/dist/*.dmg
+          - nome: Mac (Intel)
+            os: macos-14
+            micromamba: osx-arm64
+            plataforma: osx-64
+            builder: --mac --x64
+            recursos: dist/mac/DoneInstagram.app/Contents/Resources
+            arquivos: desktop/dist/*.dmg
+          - nome: Linux
+            os: ubuntu-22.04
+            micromamba: linux-64
+            plataforma: linux-64
+            builder: --linux --x64
+            recursos: dist/linux-unpacked/resources
+            arquivos: |
+              desktop/dist/*.AppImage
+              desktop/dist/*.deb
+
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar o micromamba
+        run: |
+          mkdir -p "$RUNNER_TEMP/mm"
+          curl -Ls "https://micro.mamba.pm/api/micromamba/${{ matrix.micromamba }}/latest" -o "$RUNNER_TEMP/mm/mm.tar.bz2"
+          tar -xjf "$RUNNER_TEMP/mm/mm.tar.bz2" -C "$RUNNER_TEMP/mm"
+          if [ -f "$RUNNER_TEMP/mm/Library/bin/micromamba.exe" ]; then
+            echo "MM=$RUNNER_TEMP/mm/Library/bin/micromamba.exe" >> "$GITHUB_ENV"
+          else
+            echo "MM=$RUNNER_TEMP/mm/bin/micromamba" >> "$GITHUB_ENV"
+          fi
+
+      - name: Montar o R com os pacotes do projeto
+        run: |
+          "$MM" create -y -q -r "$RUNNER_TEMP/mamba" -p desktop/r-env --platform ${{ matrix.plataforma }} \
+            -c conda-forge --override-channels $(cat desktop/build/pacotes_r.txt)
+          bash desktop/build/enxugar_r.sh desktop/r-env
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Montar o instalador
+        working-directory: desktop
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+        run: |
+          npm install --no-audit --no-fund
+          npx electron-builder ${{ matrix.builder }} --publish never
+
+      - name: Testar o programa montado
+        # O Mac Intel é montado num Mac com chip Apple: o teste depende do Rosetta
+        continue-on-error: ${{ matrix.plataforma == 'osx-64' }}
+        run: bash desktop/build/testar_pacote.sh "desktop/${{ matrix.recursos }}"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: DoneInstagram ${{ matrix.nome }}
+          path: ${{ matrix.arquivos }}
+          if-no-files-found: error
+
+  publicar:
+    name: Publicar a versão
+    needs: construir
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: instaladores
+          merge-multiple: true
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: instaladores/*
+          body: |
+            ## Baixe o instalador do seu computador
+
+            | Sistema | Arquivo |
+            |---|---|
+            | **Windows** | `DoneInstagram-…-win-x64.exe` |
+            | **Mac com chip Apple** (M1, M2, M3…) | `DoneInstagram-…-mac-arm64.dmg` |
+            | **Mac com Intel** | `DoneInstagram-…-mac-x64.dmg` |
+            | **Linux** | `.AppImage` (qualquer distribuição) ou `.deb` (Ubuntu, Debian) |
+
+            Na primeira vez, cada pessoa informa a **própria chave do OpenRouter** no programa.
+            Veja o passo a passo de instalação no README do repositório.
