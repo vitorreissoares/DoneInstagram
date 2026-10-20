@@ -107,7 +107,8 @@
       "icon": "build/icon.png",
       "maintainer": "Equipe DoneInstagram <doneinstagram@users.noreply.github.com>",
       "synopsis": "Monitoramento de postagens no Instagram"
-    }
+    },
+    "publish": null
   },
   "author": {
     "name": "Equipe DoneInstagram",
