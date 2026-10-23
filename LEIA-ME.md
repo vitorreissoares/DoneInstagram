@@ -126,7 +126,9 @@ Os números aparecem para a IA combinada e para cada fonte (legenda, imagem, ví
 
 Na subaba **Validação compartilhada**, o app guia você em 4 passos:
 
-1. **Preparar a planilha (uma vez só, cerca de 5 minutos).** Crie uma Planilha Google e abra **Extensões → Apps Script**. Cole os dois arquivos que o app oferece para baixar: o `Codigo.gs` já vem com a sua senha e o `Validador.html` vai num arquivo HTML chamado `Validador`. Depois clique em **Implantar → Nova implantação → App da Web**, com "Executar como: Eu" e "Quem pode acessar: Qualquer pessoa". Cole o link `/exec` no app e clique em **Conectar e testar**.
+1. **Preparar a planilha (uma vez só, cerca de 5 minutos).** Crie uma Planilha Google e abra **Extensões → Apps Script**. Cole os dois arquivos que o app oferece para baixar: o `Codigo.gs` e o `Validador.html`, este num arquivo HTML chamado `Validador`. Depois clique em **Implantar → Nova implantação → App da Web**, com "Executar como: Eu" e "Quem pode acessar: Qualquer pessoa". Cole o link `/exec` no app e clique em **Conectar e testar**. O primeiro computador que se conecta fica autorizado na planilha.
+   - **Outro computador** (ou outra instalação do programa) vai usar a mesma planilha? No Apps Script, escolha a função `autorizarOutroComputador` no topo do editor e clique em **Executar**. Em até 30 minutos, clique em **Conectar e testar** no outro computador.
+   - Se aparecer **"Token inválido"**, é isso: o computador ainda não foi autorizado. Faça o passo acima.
 2. **Enviar a rodada.** O que você já validou no app vai junto.
 3. **Convidar.** O botão **Copiar link** copia o link, e **Copiar mensagem de convite** copia um texto pronto para WhatsApp ou e-mail. Cada pessoa digita o nome e valida na mesma tela de interruptores. Duas pessoas nunca recebem a mesma postagem ao mesmo tempo.
 4. **Acompanhar e trazer.** **Ver andamento** mostra quantas cada pessoa já validou. **Trazer validações para o app** traz as respostas, que também são trazidas sozinhas ao abrir a rodada.

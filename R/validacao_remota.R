@@ -47,7 +47,21 @@ resposta_remota <- function(req) {
                     error = function(e) stop("a planilha não respondeu como esperado. ",
                                              "Confira se o link termina em /exec e se a implantação ",
                                              "está com acesso para \"Qualquer pessoa\"."))
-  if (!isTRUE(corpo$ok)) stop("Planilha Google: ", corpo$erro %||% "resposta inesperada.")
+  if (!isTRUE(corpo$ok)) {
+    erro <- corpo$erro %||% "resposta inesperada."
+    if (grepl("Token inválido", erro, fixed = TRUE)) {
+      stop("a planilha já está ligada a outro computador (ou a outra instalação do programa). ",
+           "Para autorizar este: no Apps Script, escolha a função autorizarOutroComputador no topo ",
+           "do editor e clique em Executar. Depois, clique de novo em Conectar e testar. ",
+           "Se o código do Apps Script for de uma versão antiga, cole o Codigo.gs novo e publique uma nova versão ",
+           "(Implantar → Gerenciar implantações → Editar → Versão: Nova versão).", call. = FALSE)
+    }
+    if (grepl("Ação desconhecida", erro, fixed = TRUE)) {
+      stop("o código do Apps Script está desatualizado. Cole o Codigo.gs e o Validador.html novos e publique uma ",
+           "nova versão (Implantar → Gerenciar implantações → Editar → Versão: Nova versão).", call. = FALSE)
+    }
+    stop("Planilha Google: ", erro, call. = FALSE)
+  }
   corpo
 }
 

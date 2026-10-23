@@ -1125,13 +1125,26 @@ server <- function(input, output, session) {
                 tags$li("No Google Drive, crie uma ", tags$b("Planilha Google"), " nova."),
                 tags$li("Na planilha, abra ", tags$b("Extensões → Apps Script"), "."),
                 tags$li("Apague o que estiver em ", code("Código.gs"), " e cole o conteúdo do arquivo ",
-                        downloadLink("baixar_codigo_gs", "Codigo.gs"), " (já vem com a sua senha)."),
+                        downloadLink("baixar_codigo_gs", "Codigo.gs"), "."),
                 tags$li("Clique em ", tags$b("+ → HTML"), ", dê o nome ", code("Validador"),
                         " e cole o conteúdo de ", downloadLink("baixar_validador_html", "Validador.html"), "."),
                 tags$li("Clique em ", tags$b("Implantar → Nova implantação → App da Web"), ", com ",
                         tags$b("Executar como: Eu"), " e ", tags$b("Quem pode acessar: Qualquer pessoa"),
                         ". Autorize quando o Google pedir."),
-                tags$li("Copie o ", tags$b("URL do App da Web"), " (termina em /exec) e cole abaixo.")
+                tags$li("Copie o ", tags$b("URL do App da Web"), " (termina em /exec), cole abaixo e clique em ",
+                        tags$b("Conectar e testar"), ". Este computador fica autorizado na planilha.")
+              ),
+              tags$details(
+                class = "small text-muted mb-2",
+                tags$summary("Usar a mesma planilha em outro computador, ou mudou o código do Apps Script?"),
+                tags$ul(
+                  class = "mt-2",
+                  tags$li("Outro computador: no Apps Script, escolha a função ", code("autorizarOutroComputador"),
+                          " no topo do editor e clique em ", tags$b("Executar"), ". Em até 30 minutos, clique em ",
+                          tags$b("Conectar e testar"), " no outro computador."),
+                  tags$li("Código alterado: só passa a valer depois de ", tags$b("Implantar → Gerenciar implantações → ",
+                          "Editar (lápis) → Versão: Nova versão → Implantar"), ". O link continua o mesmo.")
+                )
               ),
               div(class = "d-flex gap-2 align-items-end flex-wrap",
                   div(style = "flex: 1; min-width: 260px",

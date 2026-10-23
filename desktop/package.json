@@ -1,7 +1,7 @@
 {
   "name": "doneinstagram",
   "productName": "DoneInstagram",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Monitoramento de postagens no Instagram: categorização com IA, validação humana e relatório",
   "main": "main.js",
   "license": "UNLICENSED",

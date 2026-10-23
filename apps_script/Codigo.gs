@@ -5,12 +5,15 @@
  * postagens e as validações; o link do "App da Web" abre o validador para
  * quantos pesquisadores forem necessários, ao mesmo tempo.
  *
- * O app em R gera este arquivo já com o token preenchido
- * (aba Validação > Validação compartilhada > passo 1).
+ * Senha entre o app e a planilha: não precisa configurar nada. O primeiro
+ * computador que se conectar (botão "Conectar e testar" no app) fica autorizado.
+ * Para autorizar outro computador, escolha a função autorizarOutroComputador
+ * no topo do editor, clique em Executar e, em até 30 minutos, conecte pelo app.
  */
 
-// Senha que o app em R usa para enviar e buscar dados. Não precisa decorar.
+// Versões anteriores traziam a senha escrita aqui; se houver uma, ela continua valendo.
 const TOKEN = 'TROQUE-ESTE-TOKEN';
+const MINUTOS_PARA_AUTORIZAR = 30;
 
 const ABA = 'postagens';
 const RESERVA_MINUTOS = 20; // tempo que uma postagem fica reservada para quem a abriu
@@ -37,7 +40,7 @@ function doGet(e) {
       .addMetaTag('viewport', 'width=device-width, initial-scale=1');
   }
   try {
-    if (p.token !== TOKEN) throw new Error('Token inválido.');
+    conferirToken_(p.token);
     if (p.acao === 'exportar') {
       const linhas = lerLinhas_().filter(l => !p.rodada || l.rodada === p.rodada);
       return json_({ ok: true, linhas: linhas.map(limpar_) });
@@ -53,12 +56,51 @@ function doGet(e) {
 function doPost(e) {
   try {
     const corpo = JSON.parse(e.postData.contents);
-    if (corpo.token !== TOKEN) throw new Error('Token inválido.');
+    conferirToken_(corpo.token);
     if (corpo.acao === 'enviar') return json_(Object.assign({ ok: true }, enviar_(corpo)));
     throw new Error('Ação desconhecida: ' + corpo.acao);
   } catch (err) {
     return json_({ ok: false, erro: err.message });
   }
+}
+
+
+/* ---------------------------------------------------------
+   Autorização dos computadores que usam o app
+   --------------------------------------------------------- */
+
+// Aceita a senha de um computador já autorizado. Se a planilha ainda não tem
+// nenhum (primeira conexão) ou se autorizarOutroComputador foi executada há
+// pouco, o computador que está se conectando passa a ser autorizado.
+function conferirToken_(token) {
+  token = String(token || '');
+  if (token.length < 12) throw new Error('Token inválido.');
+  if (TOKEN !== 'TROQUE-ESTE-TOKEN' && token === TOKEN) return;
+  const lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    const props = PropertiesService.getScriptProperties();
+    const autorizados = JSON.parse(props.getProperty('tokens') || '[]');
+    if (autorizados.indexOf(token) >= 0) return;
+    const liberadoAte = Number(props.getProperty('liberar_ate') || 0);
+    if (autorizados.length === 0 || Date.now() < liberadoAte) {
+      autorizados.push(token);
+      props.setProperty('tokens', JSON.stringify(autorizados));
+      props.deleteProperty('liberar_ate');
+      return;
+    }
+  } finally {
+    lock.releaseLock();
+  }
+  throw new Error('Token inválido: este computador ainda não está autorizado nesta planilha.');
+}
+
+// Execute no editor do Apps Script para autorizar mais um computador
+// (o próximo que se conectar nos próximos 30 minutos)
+function autorizarOutroComputador() {
+  PropertiesService.getScriptProperties()
+    .setProperty('liberar_ate', String(Date.now() + MINUTOS_PARA_AUTORIZAR * 60 * 1000));
+  Logger.log('Pronto. Agora, em até ' + MINUTOS_PARA_AUTORIZAR + ' minutos, clique em "Conectar e testar" no app do outro computador.');
 }
 
 
