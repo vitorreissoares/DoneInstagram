@@ -1098,6 +1098,9 @@ server <- function(input, output, session) {
   # ---- Validação compartilhada (Planilha Google) ---------
   versao_remota <- reactiveVal(0)
   status_remoto <- reactiveVal(NULL)
+  editando_remota <- reactiveVal(FALSE)   # formulário do passo 1 aberto para trocar o link
+  observeEvent(input$refazer_config, editando_remota(TRUE))
+  observeEvent(input$cancelar_config, editando_remota(FALSE))
 
   output$painel_remoto <- renderUI({
     versao_remota()
@@ -1107,20 +1110,30 @@ server <- function(input, output, session) {
     enviada <- rodada_existe(id) && isTRUE(ler_rodada(id)$remota)
     st <- status_remoto()
 
+    editando <- !configurada || editando_remota()
     feitos <- c(configurada, enviada, FALSE, FALSE)
     tagList(
       p(class = "text-muted small",
         "Para várias pessoas validarem ao mesmo tempo, cada uma no seu computador, por um link. ",
         "As postagens e as respostas ficam numa Planilha Google no seu Drive. Clique num passo para abri-lo."),
+      if (configurada && !editando)
+        div(class = "d-flex align-items-center gap-2 flex-wrap small border rounded-3 px-3 py-2 mb-3 bg-white",
+            span(class = "bolinha"), tags$b("Planilha conectada:"),
+            code(class = "text-break", cfg$url),
+            actionLink("refazer_config", tagList(icon("pen"), " Trocar o link"), class = "ms-auto")),
 
       accordion(
       class = "principal passos", multiple = TRUE,
       # Abre o primeiro passo que falta (e o 4, quando já há andamento para mostrar)
-      open = unique(c(paste0("passo", which(!feitos)[1]), if (enviada) c("passo3", "passo4"))),
+      open = unique(c(if (editando) "passo1", paste0("passo", which(!feitos)[1]), if (enviada) c("passo3", "passo4"))),
       passo(1, "Preparar a planilha (só na primeira vez)", feito = configurada,
-            if (configurada) p(class = "small mb-2", "Planilha conectada. ",
-                               actionLink("refazer_config", "Refazer a configuração")),
-            if (!configurada || isTRUE(input$refazer_config > 0)) tagList(
+            if (configurada && !editando)
+              p(class = "small mb-2", "Planilha conectada (veja o link acima)."),
+            if (configurada && editando)
+              div(class = "small mb-2",
+                  "Cole o link novo abaixo e clique em Conectar e testar. ",
+                  actionLink("cancelar_config", "Cancelar")),
+            if (editando) tagList(
               tags$ol(class = "small",
                 tags$li("No Google Drive, crie uma ", tags$b("Planilha Google"), " nova."),
                 tags$li("Na planilha, abra ", tags$b("Extensões → Apps Script"), "."),
@@ -1207,6 +1220,9 @@ server <- function(input, output, session) {
     if (!is.null(resultado)) {
       showNotification("Planilha Google conectada!", type = "message")
       status_remoto(resultado)
+      editando_remota(FALSE)
+    } else {
+      editando_remota(TRUE)   # deu erro: o campo continua aberto para corrigir o link
     }
     versao_remota(versao_remota() + 1)
   })
